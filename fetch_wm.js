@@ -130,6 +130,18 @@ async function makeWalmartCatalogCall(requestObj) {
     }
 }
 
+// Build the request URL from an input object
+function buildRequestUrl(baseUrl, params) {
+    const { ids, storeId } = params;
+    if (!ids || !storeId) {
+        throw new Error("Both 'ids' and 'storeId' parameters are required");
+    }
+    const url = new URL(baseUrl);
+    url.searchParams.set('ids', ids);
+    url.searchParams.set('storeId', storeId);
+    return url.toString();
+}
+
 // Main execution block
 async function main() {
     const consumerId = process.env.CONSUMER_ID;
@@ -147,8 +159,12 @@ async function main() {
     }
 
     // Test the API call with a sample request
+    const baseUrl = "https://developer.api.walmart.com/api-proxy/service/affil/product/v2/items";
+    const urlParams = { ids: "677669806", storeId: "1230" };
+    const url = buildRequestUrl(baseUrl, urlParams);
+    
     const testRequest = {
-        url: "https://developer.api.walmart.com/api-proxy/service/affil/product/v2/paginated/items",
+        url,
         method: "GET",
         consumerId,
         privateKey
@@ -160,7 +176,12 @@ async function main() {
         console.log(`Response status: ${response.status}`);
         console.log(`Response headers:`, Object.fromEntries(response.headers.entries()));
         const text = await response.text();
-        console.log(`Response body: ${text}`);
+        try {
+            const jsonData = JSON.parse(text);
+            console.log(`Response body:\n${JSON.stringify(jsonData, null, 2)}`);
+        } catch {
+            console.log(`Response body: ${text}`);
+        }
     } catch (error) {
         console.error("Error making API call:", error.message);
         process.exit(1);
