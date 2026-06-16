@@ -32,7 +32,7 @@ flowchart TD
     DeliveryAddressPage["Delivery Address Page"]
     GoToCart("go to cart")
     HomePage["Home Page"]
-    ItemDetails["Item Details"]
+    ItemDetailsPage["Item Details Page"]
     ItemThumbnail1("item thumbnail (1)")
     ItemThumbnail2("item thumbnail (2)")
     PaymentMethodCard("payment method card")
@@ -62,27 +62,27 @@ flowchart TD
     HomePage --- SearchBar
     HomePage --- ItemThumbnail1
     HomePage --- GoToCart
-    ItemThumbnail1 --> ItemDetails
+    ItemThumbnail1 --> ItemDetailsPage
     
     %% Go to cart
     GoToCart --> ViewCartPage
     
     %% Search bar
-    SearchBar --> Search --> SearchResultsPage
+    SearchBar --- Search --> SearchResultsPage
     
     %% Search results
     SearchResultsPage --- SearchBar
     SearchResultsPage --- ItemThumbnail1
     ItemThumbnail1 --- Add --> Stepper1
-    ItemThumbnail1 --> ItemDetails
-    ItemDetails --- AddToCart
+    ItemThumbnail1 --> ItemDetailsPage
+    ItemDetailsPage --- AddToCart
     
     %% View cart
     ViewCartPage --- ProceedToCheckout --> DeliveryAddressPage
     ViewCartPage --- ItemThumbnail2
     ItemThumbnail2 --- Stepper2
     ItemThumbnail2 --- Remove
-    ItemThumbnail2 --> ItemDetails
+    ItemThumbnail2 --> ItemDetailsPage
     
     %% Delivery address
     DeliveryAddressPage --> DeliveryAddressExists
@@ -108,14 +108,16 @@ flowchart TD
     UseThisPaymentMethod --> ReviewOrderPage --- PlaceOrder
     
 
-    %% INDIVIDUAL NODE STYLING
-    style HomePage fill:#0066cc,color:#fff,stroke:#003d99,stroke-width:2px
-    %% Group 1: Item details and view cart (Green)
-    style ItemDetails fill:#00aa44,color:#fff,stroke:#006622,stroke-width:2px
-    style ViewCartPage fill:#00aa44,color:#fff,stroke:#006622,stroke-width:2px
-    %% Group 2: Delivery, time, and payment (Purple)
-    style DeliveryAddressPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
-    style SelectDeliveryWindowPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
-    style PaymentMethodPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
-    %% Group 3: Review order (Orange)
-    style ReviewOrderPage fill:#ff6600,color:#fff,stroke:#cc4400,stroke-width:2px
+    %% CLASS DEFINITIONS
+    classDef primary fill:#0066cc,color:#fff,stroke:#003d99,stroke-width:2px
+    classDef secondary fill:#00aa44,color:#fff,stroke:#006622,stroke-width:2px
+    classDef tertiary fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
+    classDef accent fill:#ff6600,color:#fff,stroke:#cc4400,stroke-width:2px
+    classDef gray fill:#B2BEB5,color:#fff,stroke:#7a7a7a,stroke-width:2px
+
+    %% APPLY CLASSES TO NODES
+    class HomePage primary
+    class ItemDetailsPage,ViewCartPage secondary
+    class DeliveryAddressPage,SelectDeliveryWindowPage,PaymentMethodPage tertiary
+    class ReviewOrderPage accent
+    class DeliveryAddressExists,PaymentMethodExists gray
