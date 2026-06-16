@@ -1,0 +1,119 @@
+---
+title: User Flow Diagram - Customer
+---
+
+%% CONVENTIONS USED
+
+%% Diamonds are actions or logical predicates (denoted by curly braces, i.e., `{}`);
+%% rectangles are pages (denoted by square brackets, i.e., `[]`);
+%% rounded rectangles are (re-useable) components (denoted by parentheses, i.e., `()`).
+
+%% A stepper is a UI component that allows the user to decrement or increment a quantity.
+
+%% If there is an arrow from A to B, then that means that B is a page or component that
+%% appears when A is selected.
+
+%% If there is a line from A to B (i.e. `---`), then that means that B is a component of A.
+
+flowchart TD
+    %% Nodes
+    Add("add")
+    AddToCart("add to cart")
+    AddressForm("address form")
+    Calendar("calendar")
+    ChangeDeliveryAddress("change")
+    ChangePaymentMethod("change")
+    Confirm("confirm")
+    DeliverToThisAddress("deliver to this address")
+    DeliveryAddressCard("delivery address card")
+    DeliveryAddressExists{"delivery<br>address<br>exists?"}
+    DeliveryAddressPage["Delivery Address Page"]
+    GoToCart("go to cart")
+    HomePage["Home Page"]
+    ItemDetails["Item Details"]
+    ItemThumbnail1("item thumbnail (1)")
+    ItemThumbnail2("item thumbnail (2)")
+    PaymentMethodCard("payment method card")
+    PaymentMethodExists{"payment<br>method<br>exists?"}
+    PaymentMethodForm("payment method form")
+    PaymentMethodPage["Payment Method Page"]
+    PlaceOrder("place order")
+    ReviewOrderPage["Review Order Page"]
+    ProceedToCheckout("proceed to checkout")
+    Remove("remove")
+    SaveAddressForFuturePurchases("fa:fa-square-check save for future purchases")
+    SavePaymentMethodForFuturePurchases("fa:fa-square-check save for future purchases")
+    SearchBar("search bar")
+    SearchResultsPage["Search Results Page"]
+    Search{"search"}
+    SelectDeliveryWindow["Select a Delivery Time Window"]
+    SelectTime("select time")
+    Stepper1("stepper (-/+)") %% use 2 ids so as to have two spatially disparate nodes
+    Stepper2("stepper (-/+)")
+    UseThisPaymentMethod("use this payment method")
+    ViewCartPage["View Cart Page"]
+
+
+    %% EDGE CONNECTIONS BETWEEN NODES
+    
+    %% HomePage
+    HomePage --- SearchBar
+    HomePage --- ItemThumbnail1
+    HomePage --- GoToCart
+    ItemThumbnail1 --> ItemDetails
+    
+    %% Go to cart
+    GoToCart --> ViewCartPage
+    
+    %% Search bar
+    SearchBar --> Search --> SearchResultsPage
+    
+    %% Search results
+    SearchResultsPage --- SearchBar
+    SearchResultsPage --- ItemThumbnail1
+    ItemThumbnail1 --- Add --> Stepper1
+    ItemThumbnail1 --> ItemDetails
+    ItemDetails --- AddToCart
+    
+    %% View cart
+    ViewCartPage --- ProceedToCheckout --> DeliveryAddressPage
+    ViewCartPage --- ItemThumbnail2
+    ItemThumbnail2 --- Stepper2
+    ItemThumbnail2 --- Remove
+    ItemThumbnail2 --> ItemDetails
+    
+    %% Delivery address
+    DeliveryAddressPage --> DeliveryAddressExists
+    DeliveryAddressExists -->|yes| DeliveryAddressCard
+    DeliveryAddressExists -->|no| AddressForm
+    DeliveryAddressCard --- ChangeDeliveryAddress --> AddressForm
+    DeliveryAddressCard --- DeliverToThisAddress
+    AddressForm --- SaveAddressForFuturePurchases
+    AddressForm --> DeliverToThisAddress
+    DeliverToThisAddress --> SelectDeliveryWindow
+    
+    %% Select delivery time
+    SelectDeliveryWindow --- Calendar --> SelectTime --> Confirm --> PaymentMethodPage
+    
+    %% Payment method
+    PaymentMethodPage --- PaymentMethodExists
+    PaymentMethodExists -->|yes| PaymentMethodCard
+    PaymentMethodCard --- ChangePaymentMethod --> PaymentMethodForm
+    PaymentMethodCard --- UseThisPaymentMethod
+    PaymentMethodExists -->|no| PaymentMethodForm 
+    PaymentMethodForm --- SavePaymentMethodForFuturePurchases
+    PaymentMethodForm --> UseThisPaymentMethod
+    UseThisPaymentMethod --> ReviewOrderPage --- PlaceOrder
+    
+
+    %% INDIVIDUAL NODE STYLING
+    style HomePage fill:#0066cc,color:#fff,stroke:#003d99,stroke-width:2px
+    %% Group 1: Item details and view cart (Green)
+    style ItemDetails fill:#00aa44,color:#fff,stroke:#006622,stroke-width:2px
+    style ViewCartPage fill:#00aa44,color:#fff,stroke:#006622,stroke-width:2px
+    %% Group 2: Delivery, time, and payment (Purple)
+    style DeliveryAddressPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
+    style SelectDeliveryWindow fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
+    style PaymentMethodPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
+    %% Group 3: Review order (Orange)
+    style ReviewOrderPage fill:#ff6600,color:#fff,stroke:#cc4400,stroke-width:2px
