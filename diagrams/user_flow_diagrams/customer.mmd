@@ -16,7 +16,9 @@ title: User Flow Diagram - Customer
 %% If there is a line from A to B (i.e. `---`), then that means that B is a component of A.
 
 flowchart TD
-    %% Nodes
+
+    %% NODES
+
     Add("add")
     AddToCart("add to cart")
     AddressForm("address form")
@@ -46,7 +48,7 @@ flowchart TD
     SearchBar("search bar")
     SearchResultsPage["Search Results Page"]
     Search{"search"}
-    SelectDeliveryWindow["Select a Delivery Time Window"]
+    SelectDeliveryWindowPage["Select a Delivery<br>Time Window Page"]
     SelectTime("select time")
     Stepper1("stepper (-/+)")
     Stepper2("stepper (-/+)")
@@ -90,10 +92,10 @@ flowchart TD
     DeliveryAddressCard --- DeliverToThisAddress
     AddressForm --- SaveAddressForFuturePurchases
     AddressForm --> DeliverToThisAddress
-    DeliverToThisAddress --> SelectDeliveryWindow
+    DeliverToThisAddress --> SelectDeliveryWindowPage
     
     %% Select delivery time
-    SelectDeliveryWindow --- Calendar --> SelectTime --> Confirm --> PaymentMethodPage
+    SelectDeliveryWindowPage --- Calendar --> SelectTime --> Confirm --> PaymentMethodPage
     
     %% Payment method
     PaymentMethodPage --- PaymentMethodExists
@@ -113,7 +115,7 @@ flowchart TD
     style ViewCartPage fill:#00aa44,color:#fff,stroke:#006622,stroke-width:2px
     %% Group 2: Delivery, time, and payment (Purple)
     style DeliveryAddressPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
-    style SelectDeliveryWindow fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
+    style SelectDeliveryWindowPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
     style PaymentMethodPage fill:#7733cc,color:#fff,stroke:#4d1a99,stroke-width:2px
     %% Group 3: Review order (Orange)
     style ReviewOrderPage fill:#ff6600,color:#fff,stroke:#cc4400,stroke-width:2px
